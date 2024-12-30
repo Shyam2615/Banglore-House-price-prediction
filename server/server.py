@@ -1,13 +1,14 @@
+import os  # Import the os module to read environment variables
 from flask import Flask, request, jsonify
 import utils
+
 app = Flask(__name__)
 
 @app.route("/get_location_names")
 def get_location_names():
     response = jsonify({
-        'location' : utils.get_location_names()
+        'location': utils.get_location_names()
     })
-
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
@@ -19,13 +20,13 @@ def predict_home_price():
     bath = int(request.form['bath'])
 
     response = jsonify({
-        'estimated_price': utils.get_estimated_price(location,total_sqft,bhk,bath)
+        'estimated_price': utils.get_estimated_price(location, total_sqft, bhk, bath)
     })
     response.headers.add('Access-Control-Allow-Origin', '*')
-
     return response
 
 if __name__ == "__main__":
-    print("Strating Python server for home price prediction")
+    print("Starting Python server for home price prediction")
     utils.load_saved_artifacts()
-    app.run()
+    port = int(os.environ.get('PORT', 5000))  # Default to 5000 if PORT is not set
+    app.run(host='0.0.0.0', port=port)
